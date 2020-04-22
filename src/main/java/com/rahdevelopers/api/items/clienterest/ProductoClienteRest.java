@@ -11,9 +11,9 @@ import com.rahdevelopers.api.items.dto.ProductoDto;
 @FeignClient(name = "servicio-productos")
 public interface ProductoClienteRest {
 
-	@GetMapping("/producto/listar")
+	@GetMapping("/listar")
 	public List<ProductoDto> getListarProductos();
 	
-	@GetMapping("/producto/{id}")
+	@GetMapping("/{id}")
 	public ProductoDto getProducto(@PathVariable Long id);
 }
