@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.rahdevelopers.api.items.clienterest.ProductoClienteRest;
 import com.rahdevelopers.api.items.dto.ItemDto;
+import com.rahdevelopers.api.items.dto.ProductoDto;
 
-@Service
+@Service("serviceImplFeign")
 public class ItemServiceImplFeign implements ItemService {
 
 	@Autowired
@@ -17,15 +18,27 @@ public class ItemServiceImplFeign implements ItemService {
 
 	@Override
 	public List<ItemDto> findAll() {
-		// TODO Auto-generated method stub
 		return this.clienteRest.getListarProductos().stream().map(producto -> new ItemDto(producto, 1))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public ItemDto findById(Long id, Integer cantidad) {
-		// TODO Auto-generated method stub
 		return new ItemDto(this.clienteRest.getProducto(id), cantidad);
+	}
+
+	@Override
+	public ProductoDto save(ProductoDto productoDto) {
+		return null;
+	}
+
+	@Override
+	public ProductoDto update(ProductoDto productoDto, Long id) {
+		return null;
+	}
+
+	@Override
+	public void delete(Long id) {
 	}
 
 }
