@@ -1,10 +1,17 @@
 package com.rahdevelopers.api.items.apicontroller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +21,35 @@ import com.rahdevelopers.api.items.dto.ItemDto;
 import com.rahdevelopers.api.items.dto.ProductoDto;
 import com.rahdevelopers.api.items.service.ItemService;
 
+@RefreshScope
 @RestController
 public class ItemApiController {
 
 	@Autowired
 	private ItemService itemService;
+	
+	@Autowired
+	private Environment environment; 
+	
+	@Value("${configuracion.text}")
+	private String configText;
+	
+	@GetMapping("/config-server")
+	public ResponseEntity<Map<String, String>> configServer(@Value("${server.port}") String port) {
+
+		Map<String, String> responseJson = new HashMap<>();
+		responseJson.put("configText", this.configText);
+		responseJson.put("port", port);
+
+		List<String> profiles = Arrays.asList(this.environment.getActiveProfiles());
+
+		profiles.stream().filter(filter -> filter.equals("dev")).forEach(profile -> {
+			responseJson.put("autor.name", this.environment.getProperty("configuracion.autor.name"));
+			responseJson.put("autor.email", this.environment.getProperty("configuracion.autor.email"));
+		});
+
+		return ResponseEntity.ok(responseJson);
+	}
 
 	@HystrixCommand(fallbackMethod = "getLitarItemsError")
 	@GetMapping("/listar")
