@@ -31,7 +31,7 @@ import com.rahdevelopers.api.items.service.ItemService;
 public class ItemApiController {
 
 	@Autowired
-	@Qualifier("serviceImplRest")
+	@Qualifier("serviceImplFeign")
 	private ItemService itemService;
 
 	@Autowired
